@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UA360X</title>
+  <link rel="stylesheet" href="index2.css">
+  <style>
+    /* Override styles for logo positioning */
+    .viewer .overlay-logo {
+      position: absolute;
+      object-fit: contain;
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 10;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+      transition: opacity 0.3s ease;
+    }
+
+    /* LEFT LOGO - Adjust size and position independently */
+    .viewer .overlay-logo.left {
+      top: 30px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+    }
+
+    /* RIGHT MAP - Adjust size and position independently */
+    .viewer .overlay-logo.right {
+      top: 0px;
+      right: 20px;
+      width: 200px;
+      height: 200px;
+    }
+
+    .viewer iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1;
+    }
+
+    /* TABLET RESPONSIVENESS */
+    @media (max-width: 768px) {
+      .viewer .overlay-logo.left {
+        top: 15px;
+        left: 15px;
+        width: 70px;
+        height: 70px;
+      }
+
+      .viewer .overlay-logo.right {
+        top: 15px;
+        right: 15px;
+        width: 110px;
+        height: 110px;
+      }
+    }
+
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 480px) {
+      .viewer .overlay-logo.left {
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+      }
+
+      .viewer .overlay-logo.right {
+        top: 10px;
+        right: 10px;
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <button id="menuBtn">☰</button>
+    <h1>University of Abra</h1>
+  </header>
+
+  <div class="map-container" id="mapContainer">
+    <img src="assets/ua2.jpg" alt="University of Abra Map" id="campusMap">
+  </div>
+
+  <div class="viewer" id="viewer">
+    <iframe id="tourFrame" title="Campus Tour Viewer" src=""
+      allow="accelerometer; gyroscope; xr-spatial-tracking"></iframe>
+    <img id="leftLogo" src="assets/logos/logo.png" alt="UA Logo" class="overlay-logo left">
+    <img id="rightLogo" src="assets/maps/default.png" alt="Map Overlay" class="overlay-logo right">
+    <button id="backBtn" class="back-btn" title="Back to home">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <iframe id="indexFrame" src="tours.html"></iframe>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    const pins = [
+      { name: "College of Teacher Education", code: "7DxGN", link: "https://kuula.co/share/collection/7DxGN?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "80%", left: "40.5%" },
+      { name: "Information and Communication Technology Center", code: "7D308", link: "https://kuula.co/share/collection/7D308?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "79%", left: "38.9%" },
+      { name: "Asist Training and Development Center", code: "7DSkq", link: "https://kuula.co/share/collection/7DSkq?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "72%", left: "41%" },
+      { name: "Guidance and Counseling Office", code: "7H4Mc", link: "https://kuula.co/share/collection/7H4Mc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "86%", left: "40.8%" },
+      { name: "Assist Gymnasium", code: "7H4MG", link: "https://kuula.co/share/collection/7H4MG?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "68%", left: "33.5%" },
+      { name: "Agriculture Laboratory Building", code: "7H4HH", link: "https://kuula.co/share/collection/7H4HH?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "67%", left: "40%" },
+      { name: "Asist Laboratory School", code: "7H4DT", link: "https://kuula.co/share/collection/7H4DT?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "33%", left: "24%" },
+      { name: "Natural Sciences Central Laboratory", code: "7H4qw", link: "https://kuula.co/share/hRVMg/collection/7H4qw?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "74.5%", left: "40%" },
+      { name: "College of Arts and Sciences", code: "7Dtgc", link: "https://kuula.co/share/collection/7Dtgc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "75%", left: "38%" },
+      { name: "College of Agriculture", code: "7DrsL", link: "https://kuula.co/share/collection/7DrsL?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "70.5%", left: "42.5%" },
+      { name: "Executive House", code: "7DSqc", link: "https://kuula.co/share/collection/7DSqc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "56%", left: "31.8%" },
+      { name: "Guest House", code: "7DSkB", link: "https://kuula.co/share/collection/7DSkB?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "70%", left: "40.8%" },
+      { name: "Student Center", code: "7DWfD", link: "https://kuula.co/share/h20kM/collection/7DWfD?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "82%", left: "39.5%" },
+      { name: "Forestry Laboratory Center", code: "7D3R5", link: "https://kuula.co/share/collection/7D3R5?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "76%", left: "43.5%" },
+      { name: "AFTIICC", code: "7HmCC", link: "https://kuula.co/share/hywss/collection/7HmCC?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "50%", left: "31%" },
+      { name: "Research and Extension Building", code: "7Hm6F", link: "https://kuula.co/share/hymVL/collection/7Hm6F?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "50%", left: "28.8%" },
+      { name: "HEAS Building", code: "7HmPt", link: "https://kuula.co/share/collection/7HmPt?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "63%", left: "32%" },
+      { name: "FFP Hall", code: "7HL6Z", link: "https://kuula.co/share/collection/7HL6Z?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "40%", left: "24%" },
+      { name: "Administration Building", code: "7HLDj", link: "https://kuula.co/share/collection/7HLDj?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "37%", left: "25%" },
+      { name: "Village Level Processing Unit", code: "7HLvX", link: "https://kuula.co/share/collection/7HLvX?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "78%", left: "42.3%" },
+      { name: "Home Technology Department", code: "7Hhr1", link: "https://kuula.co/share/hymQk/collection/7Hhr1?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "38%", left: "23.5%" },
+      { name: "Bamboo Textile Fiber Innovation Hub", code: "7H5Mg", link: "https://kuula.co/share/collection/7H5Mg?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "78%", left: "33%" },
+      { name: "Main Gate", code: "7H5CQ", link: "https://kuula.co/share/collection/7H5CQ?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "37.5%", left: "21.2%" }
+    ];
+
+    // ✅ Tour assets mapping
+    const tourAssets = {
+      "7HLDj": { left: "assets/logos/logo.png", right: "assets/maps/admin.png" },
+      "7H4DT": { left: "assets/logos/logo.png", right: "assets/maps/labschool.png" },
+      "7Hm8L": { left: "assets/logos/logo.png", right: "assets/maps/elem.png" },
+      "7Hhr1": { left: "assets/logos/logo.png", right: "assets/maps/ht.png" },
+      "7HL6Z": { left: "assets/logos/logo.png", right: "assets/maps/ffp.png" },
+      "7Hm6F": { left: "assets/logos/logo.png", right: "assets/maps/research.png" },
+      "7HmCC": { left: "assets/logos/logo.png", right: "assets/maps/aftiicc.png" },
+      "7HmPt": { left: "assets/logos/logo.png", right: "assets/maps/heas.png" },
+      "7Hmlp": { left: "assets/logos/logo.png", right: "assets/maps/clinic.png" },
+      "7DSYF": { left: "assets/logos/logo.png", right: "assets/maps/library.png" },
+      "7H4MG": { left: "assets/logos/logo.png", right: "assets/maps/gym.png" },
+      "7H5Mg": { left: "assets/logos/logo.png", right: "assets/maps/bamboo.png" },
+      "7D308": { left: "assets/logos/logo.png", right: "assets/maps/cmcs.png" },
+      "7Dtgc": { left: "assets/logos/logo.png", right: "assets/maps/sciences.png" },
+      "7H4Mc": { left: "assets/logos/logo.png", right: "assets/maps/guidance.png" },
+      "7H4qw": { left: "assets/logos/logo.png", right: "assets/maps/natsci.png" },
+      "7DWfD": { left: "assets/logos/logo.png", right: "assets/maps/sc.png" },
+      "7DxGN": { left: "assets/logos/logo.png", right: "assets/maps/educ.png" },
+      "7D3R5": { left: "assets/logos/logo.png", right: "assets/maps/forestry.png" },
+      "7DrsL": { left: "assets/logos/logo.png", right: "assets/maps/new-agri.png" },
+      "7DSkq": { left: "assets/logos/logo.png", right: "assets/maps/atdc.png" },
+      "7HLvX": { left: "assets/logos/logo.png", right: "assets/maps/processing.png" },
+      "7H4HH": { left: "assets/logos/logo.png", right: "assets/maps/old-agri.png" },
+      "7DSqc": { left: "assets/logos/logo.png", right: "assets/maps/exe.png" },
+      "7DSkB": { left: "assets/logos/logo.png", right: "assets/maps/guest.png" },
+      "7H5CQ": { left: "assets/logos/logo.png", right: "assets/maps/main.png" }
+    };
+
+    const container = document.getElementById('mapContainer');
+    const viewer = document.getElementById('viewer');
+    const frame = document.getElementById('tourFrame');
+    const backBtn = document.getElementById('backBtn');
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('menuBtn');
+    const overlay = document.getElementById('overlay');
+    const leftLogo = document.getElementById('leftLogo');
+    const rightLogo = document.getElementById('rightLogo');
+
+    // Create map pins
+    pins.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'pin';
+      el.style.top = p.top;
+      el.style.left = p.left;
+      el.title = p.name;
+
+      const tip = document.createElement('div');
+      tip.className = 'tooltip';
+      tip.innerText = p.name;
+      el.appendChild(tip);
+
+      el.addEventListener('click', ev => {
+        ev.stopPropagation();
+        openTour(p.link, p.code);
+      });
+      container.appendChild(el);
+    });
+
+    // Listen for messages from sidebar (tours.html)
+    window.addEventListener('message', function (event) {
+      if (event.data && event.data.type === 'openTour') {
+        openTour(event.data.url, event.data.code);
+      }
+    });
+
+    // ✅ FIXED: Update images using the tour code directly
+    function updateOverlayImages(tourCode) {
+      console.log('Updating overlay for tour code:', tourCode);
+
+      // Update logo + map dynamically
+      if (tourCode && tourAssets[tourCode]) {
+        leftLogo.src = tourAssets[tourCode].left;
+        rightLogo.src = tourAssets[tourCode].right;
+        console.log('✅ Updated to:', tourAssets[tourCode]);
+      } else {
+        // Fallback to default images
+        leftLogo.src = "assets/logos/logo.png";
+        rightLogo.src = "assets/maps/default.png";
+        console.log('⚠️ Using default images, code not found:', tourCode);
+      }
+    }
+
+    function openTour(url, tourCode) {
+      frame.src = url;
+      
+      // If tourCode is not provided, try to extract from URL
+      if (!tourCode) {
+        const match = url.match(/collection\/([a-zA-Z0-9]+)/);
+        tourCode = match ? match[1] : null;
+      }
+      
+      updateOverlayImages(tourCode);
+      viewer.classList.add('open');
+      viewer.setAttribute('aria-hidden', 'false');
+      setTimeout(() => backBtn.classList.add('show'), 220);
+      document.querySelector('.map-container').style.filter = 'blur(1px) brightness(.9)';
+      closeSidebar();
+
+      // Request fullscreen on the viewer
+      setTimeout(() => {
+        if (viewer.requestFullscreen) {
+          viewer.requestFullscreen().catch(err => {
+            console.log('Fullscreen request failed:', err);
+          });
+        }
+      }, 300);
+    }
+
+    function closeTour() {
+      // Exit fullscreen if active
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+
+      backBtn.classList.remove('show');
+      viewer.classList.remove('open');
+      viewer.setAttribute('aria-hidden', 'true');
+      setTimeout(() => {
+        frame.src = "";
+        // Reset to default images
+        leftLogo.src = "assets/logos/logo.png";
+        rightLogo.src = "assets/maps/default.png";
+      }, 420);
+      document.querySelector('.map-container').style.filter = 'none';
+    }
+
+    backBtn.addEventListener('click', closeTour);
+    viewer.addEventListener('click', e => {
+      if (e.target === viewer) closeTour();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeTour();
+        closeSidebar();
+      }
+    });
+
+    // Handle fullscreen change events
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        // User exited fullscreen, close the tour
+        if (viewer.classList.contains('open')) {
+          closeTour();
+        }
+      }
+    });
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+
+    menuBtn.addEventListener('click', openSidebar);
+    overlay.addEventListener('click', closeSidebar);
+  </script>
+</body>
+
+</html>

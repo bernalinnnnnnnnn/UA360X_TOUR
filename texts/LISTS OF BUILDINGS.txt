@@ -1,0 +1,30 @@
+LISTS OF BUILDINGS INCLUDED IN THE TOUR BASE FROM THE MAP
+
+1. HEAS Building
+	- Clinic
+	- Library
+2. UA Gymnasium
+13. Presidential House/Executive House
+19. Research and Extension Building
+47. Asist Laboratory School
+48. New Admin Building
+49. Asist Laboratory School Annex (Elementary)
+53. Home Technology Department
+54. FFP Hall
+66. College of Mathematics and Computing Sciences
+67. Natural Sciences
+68. Agriculture Laboratory Building
+69. Agriculture Laboratory Building Annex
+70. Asist Training and Development Center
+71. New Agriculture Building
+72. Forestry Department
+73. Post Processing Technology Building
+74. Village Level Processing Center
+75. Engineering Building 
+76. CTE Annex
+77. Student Center 
+78. College of Teacher Education
+79. Information and Communication Technology Center
+80. Guidance and Counseling Office
+84. Bamboo Fiber Innovation Hub
+85. Afftic

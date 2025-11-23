@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UA360X - Tour Viewer</title>
+  <link rel="stylesheet" href="tour2.css" />
+</head>
+
+<body>
+
+  <!-- Main Tour Iframe -->
+  <iframe id="tourFrame" allow="xr-spatial-tracking; gyroscope; accelerometer"></iframe>
+
+  <!-- Overlay Logos -->
+  <img id="leftLogo" class="overlay-logo left" src="assets/logos/logo.png" alt="UA Logo" />
+  <img id="rightLogo" class="overlay-logo right" src="assets/maps/default.png" alt="Mini Map" />
+
+  <!-- Controls -->
+  <div class="viewer-controls">
+    <button id="openQuickNav">Explore</button>
+    <button id="openDirections">Directions</button>
+  </div>
+
+  <!-- Back Button -->
+  <button id="backButton" class="back-button">⤴</button>
+
+  <!-- Loading Screen -->
+  <div id="loading" class="loading">Loading virtual tour...</div>
+
+  <script>
+    /* ===============================================
+       Get tour URL from index.html
+       =============================================== */
+    const params = new URLSearchParams(window.location.search);
+    const tourUrl = params.get("url");
+
+    const frame = document.getElementById("tourFrame");
+    const leftLogo = document.getElementById("leftLogo");
+    const rightLogo = document.getElementById("rightLogo");
+    const loading = document.getElementById("loading");
+    const backButton = document.getElementById("backButton");
+
+    /* ===============================================
+       Tour-specific logo & map assets
+       =============================================== */
+        const tourAssets = {
+      "7HLDj": { left: "assets/logos/logo.png" },
+      "7H4DT": { left: "assets/logos/logo.png" },
+      "7Hm8L": { left: "assets/logos/logo.png" },
+      "7Hhr1": { left: "assets/logos/logo.png" },
+      "7HL6Z": { left: "assets/logos/logo.png" },
+      "7Hm6F": { left: "assets/logos/logo.png" },
+      "7HmCC": { left: "assets/logos/logo.png" },
+      "7HmPt": { left: "assets/logos/logo.png" },
+      "7Hmlp": { left: "assets/logos/logo.png" },
+      "7DSYF": { left: "assets/logos/logo.png" },
+      "7H4MG": { left: "assets/logos/logo.png" },
+      "7H5Mg": { left: "assets/logos/logo.png" },
+      "7D308": { left: "assets/logos/logo.png" },
+      "7Dtgc": { left: "assets/logos/logo.png" },
+      "7H4Mc": { left: "assets/logos/logo.png" },
+      "7H4qw": { left: "assets/logos/logo.png" },
+      "7DWfD": { left: "assets/logos/logo.png" },
+      "7DxGN": { left: "assets/logos/logo.png" },
+      "7D3R5": { left: "assets/logos/logo.png" },
+      "7DrsL": { left: "assets/logos/logo.png" },
+      "7DSkq": { left: "assets/logos/logo.png" },
+      "7HLvX": { left: "assets/logos/logo.png" },
+      "7H4HH": { left: "assets/logos/logo.png" },
+      "7DSqc": { left: "assets/logos/logo.png" },
+      "7DSkB": { left: "assets/logos/logo.png" },
+      "7H5CQ": { left: "assets/logos/logo.png" }
+    };
+
+    /* ===============================================
+       Load the tour into iframe
+       =============================================== */
+    if (tourUrl) {
+      frame.src = tourUrl;
+
+      // Extract tour code
+      const match = tourUrl.match(/collection\/([a-zA-Z0-9]+)/);
+      const code = match ? match[1] : null;
+
+      // Update logos if available
+      if (code && tourAssets[code]) {
+        leftLogo.src = tourAssets[code].left;
+        rightLogo.src = tourAssets[code].right;
+      }
+
+      frame.onload = () => {
+        loading.style.display = "none";
+      };
+    }
+
+    /* ===============================================
+       Back Button → return to index.html
+       =============================================== */
+    backButton.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        window.location.href = "index.html";
+      }
+    });
+
+    /* ===============================================
+       Navigation Buttons
+       These send a message back to index.html
+       =============================================== */
+    document.getElementById("openQuickNav").addEventListener("click", () => {
+      window.top.postMessage({ type: "openQuickNav" }, "*");
+    });
+
+    document.getElementById("openDirections").addEventListener("click", () => {
+      window.top.postMessage({ type: "openDirections" }, "*");
+    });
+  </script>
+</body>
+
+</html>

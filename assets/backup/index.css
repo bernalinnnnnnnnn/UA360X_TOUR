@@ -1,0 +1,210 @@
+:root {
+  --bg: #07080a;
+  --accent: #0ea5ff;
+  --sidebar-bg: rgba(10, 15, 25, 0.96);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: linear-gradient(90deg, rgba(0, 38, 77, 0.95), rgba(0, 20, 40, 0.96));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  position: relative;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(16px, 3vw, 22px);
+  letter-spacing: 0.6px;
+}
+
+#menuBtn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: transform .2s ease;
+}
+
+#menuBtn:hover {
+  transform: scale(1.2);
+}
+
+.map-container {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  background: #000;
+}
+
+.map-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  filter: brightness(0.9);
+  transition: opacity 0.8s ease;
+}
+
+.pin {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background: url("assets/pin2.png") center bottom / contain no-repeat;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  transition: transform .2s ease;
+}
+
+.pin:hover {
+  transform: translate(-50%, -110%) scale(1.15);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.pin:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.viewer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 120;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .36s ease;
+}
+
+.viewer.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.viewer iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+.back-btn {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 140;
+  background: linear-gradient(180deg, rgba(14, 165, 255, 0.18), rgba(14, 165, 255, 0.06));
+  border: 1px solid rgba(14, 165, 255, 0.6);
+  color: var(--accent);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(14, 165, 255, 0.06), 0 0 18px rgba(14, 165, 255, 0.06);
+  backdrop-filter: blur(6px);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  transform: translateY(14px) scale(.98);
+  transition: transform .22s ease, opacity .22s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.back-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 100%;
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar iframe {
+  flex-grow: 1;
+  width: 100%;
+  border: none;
+  background: transparent;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 150;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media(max-width: 900px) {
+  .sidebar {
+    width: 90%;
+  }
+
+  .pin {
+    width: 6vw;
+    height: 6vw;
+  }
+}

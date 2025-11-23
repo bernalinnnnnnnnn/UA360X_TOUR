@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University of Abra - Welcome</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0066cc, #00bfff);
+      color: white;
+      text-align: center;
+    }
+    .logo {
+      max-width: 180px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+    }
+    .explore-btn {
+      padding: 14px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: #0066cc;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .explore-btn:hover {
+      background: #0066cc;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <img src="assets/logo.png" alt="University of Abra Logo" class="logo">
+  <h1>Welcome to University of Abra, <br>
+    Main Campus, Lagangilang, Abra</h1>
+  <button class="explore-btn" onclick="window.location.href='dashboard.html'">Let’s Explore it</button>
+</body>
+</html>

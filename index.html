@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta content="UA360X: Immersive Virtual Tour Experience of the University of Abra's Main Campus Indoor Facilities" property="og:title"/>
+  <meta content="Take a Virtual Step Into University of Abra's Main Campus Indoor Facilities – UA360X." property="og:description"/>
+  <meta charset="utf-8">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <title>UA360X</title>
+
+  <link href="index2.css" rel="stylesheet"/>
+
+  <style>
+    .viewer .overlay-logo {
+      position: absolute;
+      object-fit: contain;
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 10;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+      transition: opacity .25s ease;
+    }
+    .viewer .overlay-logo.left {
+      top: 30px; left: 20px; width: 100px; height: 100px;
+    }
+    @media(max-width:768px) {
+      .viewer .overlay-logo.left { top: 15px; left: 15px; width: 70px; height: 70px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>University of Abra, Main Campus</h1>
+</header>
+
+<!-- FIXED SEARCH BAR (moved below header) -->
+<div id="searchWrapFixed">
+  <input id="searchInput" type="text" placeholder="Search tours or directions (e.g. 'Administration' or 'Administration to ICT')"/>
+  <button id="searchBtn">Search</button>
+  <button id="helpBtn">Users Guide</button>
+</div>
+
+<!-- MAP (unchanged pins) -->
+<div class="map-container" id="mapContainer">
+  <img id="campusMap" src="assets/ua2.jpg" alt="University of Abra Map"/>
+  <div class="pin-container" id="pinContainer"></div>
+  <svg id="routeSvg" class="route-svg"></svg>
+</div>
+
+<!-- HOMEPAGE TOUR LIST -->
+<section class="homepage-tour-list" id="homepageTourList" aria-label="Browse tours"></section>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer" aria-hidden="true">
+  <iframe id="tourFrame" src="" allow="accelerometer; gyroscope; xr-spatial-tracking"></iframe>
+
+  <img class="overlay-logo left" id="leftLogo" src="assets/logos/logo.png" alt="UA logo"/>
+
+  <!-- HOME BUTTON (fixed smooth scroll + close viewer) -->
+<button class="back-btn" id="backBtn" aria-label="Back to home">
+  <span class="btn-tooltip">Back to Homepage</span>
+  <svg fill="none" stroke="currentColor" width="24" height="24" stroke-width="2">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
+  </svg>
+</button>
+
+
+  <!-- NEW BN1 FLOATING BUTTON (🗂️) -->
+<button id="openDrawerBtn" class="drawer-btn" aria-label="Browse Tours">
+  <span class="btn-tooltip">Browse Tours</span>
+  🗂️
+</button>
+
+
+  <!-- NEW POPUP DRAWER -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <h3>Browse Tours</h3>
+      <div class="drawer-list" id="drawerList">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Help / User Guide Modal -->
+<div class="help-modal" id="helpModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="help-content" role="document">
+    <button class="close-help" id="closeHelp" aria-label="Close help">×</button>
+
+<h2>User's Guide</h2>
+
+<p>
+  UA360X is an interactive virtual tour of the University of Abra Main Campus.
+  Every <strong>red pin</strong> on the map represents a building or facility. 
+  You can click pins, use the search bar, or browse tours to explore the campus.
+  Read this guide to understand how to navigate the website easily.
+</p>
+<br>
+
+<h3>Exploring the Map</h3>
+<ul>
+  <li>The <strong>red pins</strong> on the map show the exact location of each campus building.</li>
+  <li>Hover over a pin to display the <strong>building name</strong>.</li>
+  <li>Clicking a pin opens the <strong>360° virtual tour</strong> of that location.</li>
+  <li>
+    When you select a building using the search or directions feature, the 
+    pin will <strong>glow and animate</strong> so you can easily identify it.
+  </li>
+</ul>
+<br>
+
+<h3>Opening a Virtual Tour</h3>
+<ul>
+  <li>Locate a <strong>red pin</strong> on the map and hover to see the building’s label.</li>
+  <li>Click the pin to open its tour inside the viewer.</li>
+  <li>Use your mouse or finger to <strong>drag the view</strong> left, right, up, or down.</li>
+  <li>
+    Use the <strong>🗂️ Browse Tours</strong> button inside the viewer to switch to another building quickly.
+  </li>
+</ul>
+<br>
+
+<h3>Using the Search Bar</h3>
+<p>
+  Use the search bar at the top of the page to find a specific building.  
+  Make sure to type the building name <strong>exactly as it appears on the tour cards</strong> to avoid errors.
+</p>
+
+<h4>What happens when you search:</h4>
+<ul>
+  <li>The system finds and highlights the matching building.</li>
+  <li>The map automatically focuses on the correct pin.</li>
+  <li>The building’s pin will <strong>glow and animate</strong>.</li>
+  <li>The matching card below the map will also highlight.</li>
+</ul>
+
+<h4>Correct search examples:</h4>
+<ul>
+  <li><strong>College of Teacher Education</strong></li>
+  <li><strong>Administration Building</strong></li>
+  <li><strong>Bamboo Textile Fiber Innovation Hub</strong></li>
+</ul>
+<br>
+
+<h3>Searching for Directions (Building A ➜ Building B)</h3>
+<p>
+  You can search for directions between two buildings using the format:  
+  <strong>“Building A to Building B”</strong>
+</p>
+
+<h4>Examples:</h4>
+<ul>
+  <li><strong>Administration Building to Information and Communication Technology Center</strong></li>
+  <li><strong>HEAS Building to Gymnasium</strong></li>
+</ul>
+
+<h4>What happens next:</h4>
+<ul>
+  <li>The system identifies both buildings.</li>
+  <li>Both pins will <strong>glow and animate</strong> at the same time.</li>
+  <li>A blue connecting line appears to show the <strong>path between them</strong>.</li>
+</ul>
+<br>
+
+<h3>Navigating Inside the Tour Viewer</h3>
+<ul>
+  <li>Drag the screen to explore the 360° environment.</li>
+  <li>Use the <strong>🗂️ Browse Tours</strong> button to move to another tour instantly.</li>
+  <li>Press the <strong>Home/Back</strong> button to return to the main map.</li>
+  <li>Press <kbd>ESC</kbd> to exit fullscreen mode at any time.</li>
+</ul>
+<br>
+
+<h3>Browsing All Tours</h3>
+<p>
+  Scroll down on the main page to see the full list of buildings presented as interactive cards.
+</p>
+<ul>
+  <li>Clicking any card opens the corresponding 360° tour.</li>
+  <li>This is a helpful option for users unfamiliar with the map layout.</li>
+</ul>
+<br>
+
+<h3>Additional Tips</h3>
+<ul>
+  <li>Use your browser’s zoom feature to adjust the visibility of the map.</li>
+  <li>
+    If a search doesn’t work, double-check spelling and ensure it matches the building name as shown on the cards.
+  </li>
+  <li>Scroll down after using the map to access all tours.</li>
+</ul>
+<br>
+
+<h3>Need Help?</h3>
+<p>
+  For questions or suggestions, please contact us at:<br>
+  <a href="mailto:uaxxxtour@gmail.com">uaxxxtour@gmail.com</a>
+</p>
+
+
+
+  </div>
+</div>
+
+<script>
+/* ========== Data (pins exactly as you provided) ========== */
+const pins = [
+  { name: "College of Teacher Education", code: "7DxGN", link: "https://kuula.co/share/collection/7DxGN?logo=-1&info=0&fs=0&vr=0&sd=1&gyro=0&thumbs=-1&keys=0", top: "80%", left: "40.5%" },
+  { name: "Information and Communication Technology Center", code: "7D308", link: "https://kuula.co/share/collection/7D308?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "79%", left: "38.9%" },
+  { name: "Asist Training and Development Center", code: "7DSkq", link: "https://kuula.co/share/collection/7DSkq?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "72%", left: "41%" },
+  { name: "Guidance and Counseling Office", code: "7H4Mc", link: "https://kuula.co/share/collection/7H4Mc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "86%", left: "40.8%" },
+  { name: "Assist Gymnasium", code: "7H4MG", link: "https://kuula.co/share/collection/7H4MG?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "66%", left: "33.5%" },
+  { name: "Agriculture Laboratory Building", code: "7H4HH", link: "https://kuula.co/share/collection/7H4HH?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "67%", left: "40%" },
+  { name: "Asist Laboratory School", code: "7H4DT", link: "https://kuula.co/share/collection/7H4DT?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "33%", left: "24%" },
+  { name: "Natural Sciences Central Laboratory", code: "7H4qw", link: "https://kuula.co/share/collection/7H4qw?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "74.5%", left: "40%" },
+  { name: "College of Arts and Sciences", code: "7Dtgc", link: "https://kuula.co/share/collection/7Dtgc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "75%", left: "38%" },
+  { name: "College of Agriculture", code: "7DrsL", link: "https://kuula.co/share/collection/7DrsL?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "70.5%", left: "42.5%" },
+  { name: "Executive House", code: "7DSqc", link: "https://kuula.co/share/h377s/collection/7DSqc?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "56%", left: "31.8%" },
+  { name: "Guest House", code: "7DSkB", link: "https://kuula.co/share/collection/7DSkB?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "70%", left: "40.8%" },
+  { name: "Student Center", code: "7DWfD", link: "https://kuula.co/share/h20kM/collection/7DWfD?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "82%", left: "39.5%" },
+  { name: "Forestry Laboratory Center", code: "7D3R5", link: "https://kuula.co/share/collection/7D3R5?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "76%", left: "43.5%" },
+  { name: "AFTIICC", code: "7HmCC", link: "https://kuula.co/share/hywss/collection/7HmCC?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "50%", left: "31%" },
+  { name: "Research and Extension Building", code: "7Hm6F", link: "https://kuula.co/share/hymVL/collection/7Hm6F?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "50%", left: "28.8%" },
+  { name: "HEAS Building", code: "7HmPt", link: "https://kuula.co/share/collection/7HmPt?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "62%", left: "32%" },
+  { name: "FFP Hall", code: "7HL6Z", link: "https://kuula.co/share/collection/7HL6Z?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "40%", left: "24%" },
+  { name: "Administration Building", code: "7HLDj", link: "https://kuula.co/share/collection/7HLDj?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "37%", left: "25%" },
+  { name: "Village Level Processing Unit", code: "7HLvX", link: "https://kuula.co/share/collection/7HLvX?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "78%", left: "42.3%" },
+  { name: "Home Technology Department", code: "7Hhr1", link: "https://kuula.co/share/collection/7Hhr1?logo=-1&info=0&fs=0&vr=0&sd=1&gyro=0&thumbs=-1&keys=0", top: "38%", left: "23.5%" },
+  { name: "Bamboo Textile Fiber Innovation Hub", code: "7H5Mg", link: "https://kuula.co/share/collection/7H5Mg?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "78%", left: "33%" },
+  { name: "Main Gate", code: "7H5CQ", link: "https://kuula.co/share/collection/7H5CQ?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&keys=0", top: "37.5%", left: "21.2%" }
+];
+
+const thumbs = {
+  "7DxGN": "thumbs/educ.jpg",              // College of Teacher Education
+  "7D308": "thumbs/cmcs.jpg",              // ICT Center
+  "7DSkq": "thumbs/atdc.jpg",              // ATDC
+  "7H4Mc": "thumbs/guidance.jpg",          // Guidance Office
+  "7H4MG": "thumbs/gym2.jpg",              // Gymnasium
+  "7H4HH": "thumbs/agri.jpg",              // Agriculture Laboratory
+  "7H4DT": "thumbs/labschool.jpg",         // Lab School
+  "7H4qw": "thumbs/natsci.jpg",            // NatSci Lab
+  "7Dtgc": "thumbs/sciences.jpg", // College of Arts & Sciences (you chose E)
+  "7DrsL": "thumbs/new-agri.jpg",          // College of Agriculture
+  "7DSqc": "thumbs/exe.jpg",               // Executive House
+  "7DSkB": "thumbs/guest.jpg",             // Guest House
+  "7DWfD": "thumbs/sc.jpg",                // Student Center
+  "7D3R5": "thumbs/forestry.jpg",          // Forestry Lab
+  "7HmCC": "thumbs/aftic.jpg",             // AFTIICC
+  "7Hm6F": "thumbs/research.jpg",          // Research & Extension
+  "7HmPt": "thumbs/heas.jpg",              // HEAS Building
+  "7HL6Z": "thumbs/ffp.jpg",               // FFP Hall
+  "7HLDj": "thumbs/admin.jpg",             // Admin Building
+  "7HLvX": "thumbs/processing.jpg",        // Village Level Processing Unit
+  "7Hhr1": "thumbs/ht.jpg",                // Home Technology
+  "7H5Mg": "thumbs/bamboo.jpg",            // Bamboo Textile Fiber Innovation Hub
+  "7H5CQ": "assets/thumb-placeholder.jpg"  // Main Gate (no image)
+};
+
+
+/* ===== DOM refs ===== */
+const pinContainer = document.getElementById('pinContainer');
+const mapContainer = document.getElementById('mapContainer');
+const routeSvg = document.getElementById('routeSvg');
+const homepageTourList = document.getElementById('homepageTourList');
+const drawerList = document.getElementById('drawerList');
+const drawer = document.getElementById('drawer');
+const openDrawerBtn = document.getElementById('openDrawerBtn');
+const viewer = document.getElementById('viewer');
+const frame = document.getElementById('tourFrame');
+const backBtn = document.getElementById('backBtn');
+const leftLogo = document.getElementById('leftLogo');
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const helpBtn = document.getElementById('helpBtn');
+const helpModal = document.getElementById('helpModal');
+const closeHelp = document.getElementById('closeHelp');
+
+let pinElements = [];
+
+/* ===== Create pins (KEEP positions exactly as provided) ===== */
+function createPins() {
+  pinContainer.innerHTML = '';
+  pinElements = pins.map(p => {
+    const el = document.createElement('div');
+    el.className = 'pin';
+    el.style.top = p.top;     // preserved
+    el.style.left = p.left;   // preserved
+
+    const tip = document.createElement('div');
+    tip.className = 'tooltip';
+    tip.innerText = p.name;
+    el.appendChild(tip);
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openTour(p.link, p.code);
+    });
+
+    pinContainer.appendChild(el);
+    return { data: p, el };
+  });
+}
+
+/* ===== Homepage cards (visible under the map) ===== */
+function populateHomepageTours() {
+  homepageTourList.innerHTML = '';
+  pins.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => openTour(p.link, p.code);
+
+    const img = document.createElement('img');
+    img.alt = p.name;
+    img.src = thumbs[p.code] || 'assets/thumb-placeholder.jpg';
+
+    const h2 = document.createElement('h2');
+    h2.innerText = p.name;
+
+    card.appendChild(img);
+    card.appendChild(h2);
+    homepageTourList.appendChild(card);
+  });
+}
+
+/* ===== Drawer population (BN1) ===== */
+function populateDrawer() {
+  drawerList.innerHTML = '';
+  pins.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'drawer-card';
+    item.textContent = p.name;
+    item.onclick = (e) => {
+      e.stopPropagation();
+      drawer.classList.remove('show');
+      openTour(p.link, p.code);
+    };
+    drawerList.appendChild(item);
+  });
+}
+
+/* ===== Open/close drawer ===== */
+openDrawerBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  drawer.classList.toggle('show');
+});
+drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.classList.remove('show'); });
+
+/* ===== Viewer open/close ===== */
+function updateOverlayImages(tourCode) {
+  // simple cache-bust to refresh overlay if needed
+  leftLogo.style.opacity = '0';
+  setTimeout(() => {
+    leftLogo.src = "assets/logos/logo.png?v=" + Date.now();
+    leftLogo.style.opacity = '0.85';
+  }, 120);
+}
+
+function openTour(url, tourCode) {
+  updateOverlayImages(tourCode);
+  frame.src = url;
+  viewer.classList.add('open');
+  // attempt fullscreen but fail silently if blocked
+  setTimeout(() => { try { viewer.requestFullscreen(); } catch(e){} }, 250);
+}
+
+function closeTour() {
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+  viewer.classList.remove('open');
+  frame.src = '';
+  // clear highlights and routes when closing
+  clearRoute();
+  clearPinHighlights();
+}
+
+/* back/home button: close viewer + smooth scroll to top (H1) */
+backBtn.addEventListener('click', () => {
+  closeTour();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ===== Search (all tours searchable) ===== */
+function normalize(s) {
+  if (!s) return '';
+  return s.toString().normalize('NFKD').replace(/\s+/g,' ').trim().toLowerCase();
+}
+
+/* return array of matching pins (partial, case-insensitive) */
+function findMatches(q) {
+  q = normalize(q);
+  if (!q) return [];
+  return pins.filter(p => {
+    const name = normalize(p.name);
+    return name.includes(q) || q.includes(name) || name.replace(/\s+/g,'').includes(q.replace(/\s+/g,'')); 
+  });
+}
+
+function search() {
+  const q = searchInput.value.trim();
+  if (!q) return;
+  const parts = q.split(/\s+to\s+/i).map(s => s.trim()).filter(Boolean);
+  if (parts.length === 2) {
+    // directions: A to B
+    const A = findMatches(parts[0])[0];
+    const B = findMatches(parts[1])[0];
+    if (!A || !B) {
+      alert('Could not find both places. Try shorter names (e.g. "Admin" or "Library").');
+      return;
+    }
+    highlightRouteBetween(A, B);
+    scrollToCardFor(A.name);
+    return;
+  }
+
+  const matches = findMatches(q);
+  if (!matches.length) {
+    alert('No tours found. Try a different keyword.');
+    return;
+  }
+  // highlight first match and scroll to its card
+  highlightPin(matches[0].name);
+  scrollToCardFor(matches[0].name);
+}
+
+searchBtn.addEventListener('click', search);
+searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') search(); });
+
+/* ===== Pin highlighting & scrolling ===== */
+function clearPinHighlights() {
+  pinElements.forEach(p => p.el.classList.remove('pin-highlight','pin-target'));
+}
+function highlightPin(name) {
+  clearPinHighlights();
+  const match = pinElements.find(p => normalize(p.data.name).includes(normalize(name)));
+  if (match) match.el.classList.add('pin-highlight');
+}
+
+function scrollToCardFor(name) {
+  const cards = Array.from(homepageTourList.querySelectorAll('.card'));
+  const idx = pins.findIndex(p => normalize(p.name).includes(normalize(name)));
+  if (idx >= 0 && cards[idx]) {
+    cards[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    cards[idx].classList.add('card-flash');
+    setTimeout(()=> cards[idx].classList.remove('card-flash'), 1000);
+  }
+}
+
+/* ===== Directions / draw route ===== */
+function highlightRouteBetween(src, dst) {
+  clearRoute();
+  clearPinHighlights();
+  const srcItem = pinElements.find(pe => pe.data.name === src.name);
+  const dstItem = pinElements.find(pe => pe.data.name === dst.name);
+  if (!srcItem || !dstItem) return;
+  srcItem.el.classList.add('pin-target');
+  dstItem.el.classList.add('pin-target');
+
+  const rect = mapContainer.getBoundingClientRect();
+  const a = srcItem.el.getBoundingClientRect();
+  const b = dstItem.el.getBoundingClientRect();
+  const ax = (a.left + a.right)/2 - rect.left;
+  const ay = (a.top + a.bottom)/2 - rect.top;
+  const bx = (b.left + b.right)/2 - rect.left;
+  const by = (b.top + b.bottom)/2 - rect.top;
+  drawLine(ax, ay, bx, by);
+}
+
+function drawLine(x1,y1,x2,y2) {
+  routeSvg.innerHTML = '';
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', x1);
+  line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2);
+  line.setAttribute('y2', y2);
+  line.setAttribute('stroke', 'rgba(14,165,255,0.95)');
+  line.setAttribute('stroke-width', 4);
+  line.setAttribute('stroke-linecap', 'round');
+  routeSvg.appendChild(line);
+  routeSvg.style.display = 'block';
+}
+function clearRoute() { routeSvg.innerHTML=''; routeSvg.style.display='none'; }
+
+/* ===== Help modal handlers (was missing) ===== */
+helpBtn.addEventListener('click', () => {
+  helpModal.classList.add('show');
+  helpModal.setAttribute('aria-hidden','false');
+});
+closeHelp.addEventListener('click', () => {
+  helpModal.classList.remove('show');
+  helpModal.setAttribute('aria-hidden','true');
+});
+window.addEventListener('click', (e) => {
+  if (e.target === helpModal) {
+    helpModal.classList.remove('show');
+    helpModal.setAttribute('aria-hidden','true');
+  }
+});
+
+/* ===== Init ===== */
+function resizeSvg() {
+  const r = mapContainer.getBoundingClientRect();
+  routeSvg.setAttribute('width', r.width);
+  routeSvg.setAttribute('height', r.height);
+  routeSvg.style.width = r.width + 'px';
+  routeSvg.style.height = r.height + 'px';
+}
+window.addEventListener('resize', resizeSvg);
+
+function init() {
+  createPins();
+  populateHomepageTours();
+  populateDrawer();
+  resizeSvg();
+  setTimeout(resizeSvg, 200);
+}
+init();
+
+</script>
+</body>
+</html>
