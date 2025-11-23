@@ -34,6 +34,30 @@
       height: 100px;
     }
 
+.error-box {
+  width: 100%;
+  background: #ff4d4d;
+  color: white;
+  padding: 10px 15px;
+  margin-top: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+/* Simple fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -45%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+
+
+
+
     @media(max-width:768px) {
       .viewer .overlay-logo.left {
         top: 15px;
@@ -45,16 +69,16 @@
   </style>
 </head>
 
-<body>
 
+<body>
   <header>
     <h1>University of Abra, Main Campus</h1>
   </header>
 
   <!-- FIXED SEARCH BAR -->
   <div id="searchWrapFixed">
-    <input id="searchInput" type="text"
-      placeholder="Search tours (e.g. 'Administration Building', 'HEAS Building')" />
+    <input id="searchInput" type="text" placeholder="Search tours (e.g. 'Administration Building', 'HEAS Building')" />
+    <div id="errorBox" class="error-box"></div>
     <button id="searchBtn">Search</button>
     <button id="helpBtn">Users Guide</button>
   </div>
@@ -187,7 +211,8 @@
       <ul>
         <li>Use your browser’s zoom feature to adjust the visibility of the map.</li>
         <li>
-          If a search doesn’t work, double-check spelling and ensure it matches the building name as shown on the cards.
+          If a search doesn’t work, double-check spelling and ensure it matches the building name as shown on the
+          cards.
         </li>
         <li>Scroll down after using the map to access all tours.</li>
       </ul>
@@ -324,178 +349,317 @@
       });
     }
 
-/*** Drawer ***/
-function populateDrawer() {
-  drawerList.innerHTML = '';
-  pins.forEach(p => {
+    /*** Drawer ***/
+    function populateDrawer() {
+      drawerList.innerHTML = '';
+      pins.forEach(p => {
 
-    // Create card
-    const item = document.createElement('div');
-    item.className = 'drawer-card';
+        // Create card
+        const item = document.createElement('div');
+        item.className = 'drawer-card';
 
-    // Apply thumbnail as background
-    item.style.backgroundImage =
-      `url('${thumbs[p.code] || "assets/thumb-placeholder.jpg"}')`;
+        // Apply thumbnail as background
+        item.style.backgroundImage =
+          `url('${thumbs[p.code] || "assets/thumb-placeholder.jpg"}')`;
 
-    // Label overlay
-    const label = document.createElement("div");
-    label.className = "drawer-card-label";
-    label.textContent = p.name;
+        // Label overlay
+        const label = document.createElement("div");
+        label.className = "drawer-card-label";
+        label.textContent = p.name;
 
-    item.appendChild(label);
+        item.appendChild(label);
 
-    // Click → open tour
-    item.onclick = () => {
-      drawer.classList.remove('show');
-      openTour(p.link, p.code);
+        // Click → open tour
+        item.onclick = () => {
+          drawer.classList.remove('show');
+          openTour(p.link, p.code);
+        };
+
+        drawerList.appendChild(item);
+      });
+    }
+
+    openDrawerBtn.onclick = () => drawer.classList.toggle('show');
+    drawer.onclick = e => { if (e.target === drawer) drawer.classList.remove('show'); };
+
+
+    /*** Viewer ***/
+    function updateOverlayImages(tourCode) {
+      leftLogo.style.opacity = 0;
+      setTimeout(() => {
+        leftLogo.src = "assets/logos/logo.png?v=" + Date.now();
+        leftLogo.style.opacity = 0.85;
+      }, 120);
+    }
+
+    function openTour(url) {
+      updateOverlayImages();
+      frame.src = url;
+      viewer.classList.add('open');
+    }
+
+    function closeTour() {
+      viewer.classList.remove('open');
+      frame.src = '';
+      clearRoute();
+      clearPinHighlights();
+    }
+
+    backBtn.onclick = () => {
+      closeTour();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    drawerList.appendChild(item);
-  });
+
+  /*** Search System ***/
+function normalize(str) {
+  return (str || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");
 }
 
-openDrawerBtn.onclick = () => drawer.classList.toggle('show');
-drawer.onclick = e => { if (e.target === drawer) drawer.classList.remove('show'); };
+const aliases = {
+  "admin": "Administration Building",
+  "administration": "Administration Building",
+  "administration building": "Administration Building",
 
+  "ict": "Information and Communication Technology Center",
+  "cmcs": "Information and Communication Technology Center",
+  "ict center": "Information and Communication Technology Center",
+  "computer": "Information and Communication Technology Center",
 
-/*** Viewer ***/
-function updateOverlayImages(tourCode) {
-  leftLogo.style.opacity = 0;
-  setTimeout(() => {
-    leftLogo.src = "assets/logos/logo.png?v=" + Date.now();
-    leftLogo.style.opacity = 0.85;
-  }, 120);
-}
+  "gym": "Assist Gymnasium",
+  "gymnasium": "Assist Gymnasium",
 
-function openTour(url) {
-  updateOverlayImages();
-  frame.src = url;
-  viewer.classList.add('open');
-}
+  "cte": "College of Teacher Education",
+  "teacher education": "College of Teacher Education",
+  "educ": "College of Teacher Education",
 
-function closeTour() {
-  viewer.classList.remove('open');
-  frame.src = '';
-  clearRoute();
-  clearPinHighlights();
-}
+  "natsci": "Natural Sciences Central Laboratory",
+  "natural science": "Natural Sciences Central Laboratory",
+  "nscl": "Natural Sciences Central Laboratory",
 
-backBtn.onclick = () => {
-  closeTour();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  "lab school": "Asist Laboratory School",
+  "laboratory school": "Asist Laboratory School",
+  "labschool": "Asist Laboratory School",
+  "high school": "Asist Laboratory School",
+  "highschool": "Asist Laboratory School",
+  "lab high": "Asist Laboratory School",
+
+  "cas": "College of Arts and Sciences",
+  "arts and sciences": "College of Arts and Sciences",
+  "science building": "College of Arts and Sciences",
+
+  "agri": "College of Agriculture",
+  "agriculture": "College of Agriculture",
+  "new agriculture building": "College of Agriculture",
+  "new agri": "College of Agriculture",
+
+  "agri lab": "Agriculture Laboratory Building",
+  "agri laboratory": "Agriculture Laboratory Building",
+  "old agriculture building": "Agriculture Laboratory Building",
+  "old agri": "Agriculture Laboratory Building",
+
+  "atdc": "Asist Training and Development Center",
+  "training center": "Asist Training and Development Center",
+
+  "guidance": "Guidance and Counseling Office",
+  "guidance office": "Guidance and Counseling Office",
+
+  "sc": "Student Center",
+  "student center": "Student Center",
+
+  "exe": "Executive House",
+  "executive house": "Executive House",
+
+  "guest": "Guest House",
+  "guesthouse": "Guest House",
+
+  "forestry": "Forestry Laboratory Center",
+  "forestry building": "Forestry Laboratory Center",
+
+  "aftiicc": "AFTIICC",
+
+  "research and extension department": "Research and Extension Building",
+  "extension": "Research and Extension Building",
+  "research": "Research and Extension Building",
+
+  "heas": "HEAS Building",
+  "heas building": "HEAS Building",
+
+  "ffp": "FFP Hall",
+  "ffp hall": "FFP Hall",
+
+  "vpu": "Village Level Processing Unit",
+  "processing unit": "Village Level Processing Unit",
+  "village level": "Village Level Processing Unit",
+  "village": "Village Level Processing Unit",
+
+  "ht": "Home Technology Department",
+  "home tech": "Home Technology Department",
+
+  "bamboo": "Bamboo Textile Fiber Innovation Hub",
+  "bamboo hub": "Bamboo Textile Fiber Innovation Hub",
+
+  "main gate": "Main Gate",
+  "gate": "Main Gate"
 };
 
+function showError(msg) {
+  const box = document.getElementById("errorBox");
+  if (!box) return;
 
-    /*** Search System ***/
-    function normalize(str) {
-      return (str || "").toLowerCase().trim().replace(/\s+/g, " ");
+  box.textContent = msg;
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.opacity = "1";
+  }, 10); // fade in
+
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    box.style.opacity = "0";
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 300);
+  }, 3000);
+}
+
+
+/*** Fuzzy Matching ***/
+function fuzzyScore(target, query) {
+  target = normalize(target);
+  query = normalize(query);
+
+  let score = 0, ti = 0, qi = 0;
+
+  while (ti < target.length && qi < query.length) {
+    if (target[ti] === query[qi]) {
+      score += 2;
+      qi++;
     }
+    ti++;
+  }
 
-    const aliases = {
-      "admin": "Administration Building",
-      "ict": "Information and Communication Technology Center",
-      "gym": "Assist Gymnasium",
-      "cte": "College of Teacher Education",
-      "natsci": "Natural Sciences Central Laboratory",
-      "lab school": "Asist Laboratory School",
-      "exe": "Executive House",
-      "guest": "Guest House",
-      "bamboo": "Bamboo Textile Fiber Innovation Hub"
+  if (target.includes(query)) score += 5;
+  if (target.startsWith(query)) score += 3;
+
+  return score;
+}
+
+/*** Find Matches (Alias + Fuzzy) ***/
+function findMatches(q) {
+  q = normalize(q);
+  if (!q) return [];
+
+  // 1. Check alias direct match or inside input
+  for (const a in aliases) {
+    const cleanA = normalize(a);
+    if (q === cleanA || q.includes(cleanA)) {
+      const aliasedName = aliases[a];
+      return pins.filter(p => normalize(p.name) === normalize(aliasedName));
+    }
+  }
+
+  // 2. Fuzzy matching
+  let results = [];
+
+  pins.forEach(p => {
+    const score = fuzzyScore(p.name, q);
+    if (score >= 5) results.push({ p, s: score });
+  });
+
+  results.sort((a, b) => b.s - a.s);
+  return results.map(r => r.p);
+}
+
+/*** Suggestions Dropdown ***/
+searchInput.oninput = () => {
+  const box = document.getElementById("searchSuggestions");
+  box.innerHTML = "";
+
+  const q = searchInput.value.trim();
+  if (!q) {
+    box.style.display = "none";
+    return;
+  }
+
+  const list = findMatches(q).slice(0, 6);
+  if (!list.length) {
+    box.style.display = "none";
+    return;
+  }
+
+  list.forEach(p => {
+    const d = document.createElement("div");
+    d.className = "suggestion-item";
+    d.textContent = p.name;
+    d.onclick = () => {
+      searchInput.value = p.name;
+      box.style.display = "none";
+      search();
     };
+    box.appendChild(d);
+  });
 
-    function fuzzyScore(target, query) {
-      target = normalize(target); query = normalize(query);
-      let score = 0, ti = 0, qi = 0;
-      while (ti < target.length && qi < query.length) {
-        if (target[ti] === query[qi]) { score += 2; qi++; }
-        ti++;
-      }
-      if (target.includes(query)) score += 5;
-      if (target.startsWith(query)) score += 3;
-      return score;
-    }
+  box.style.display = "block";
+};
 
-    function findMatches(q) {
-      q = normalize(q);
-      for (const a in aliases) {
-        if (q === a || q.includes(a)) {
-          return pins.filter(p => normalize(p.name) === normalize(aliases[a]));
-        }
-      }
-      let results = [];
-      pins.forEach(p => {
-        const s = fuzzyScore(p.name, q);
-        if (s > 0) results.push({ p, s });
-      });
-      results.sort((a, b) => b.s - a.s);
-      return results.map(r => r.p);
-    }
+document.addEventListener("click", e => {
+  const box = document.getElementById("searchSuggestions");
+  if (!box.contains(e.target) && e.target !== searchInput) {
+    box.style.display = "none";
+  }
+});
 
-    /*** Suggestions Dropdown ***/
-    searchInput.oninput = () => {
-      const box = document.getElementById("searchSuggestions");
-      box.innerHTML = "";
-      const q = searchInput.value.trim();
-      if (!q) { box.style.display = "none"; return; }
-      const list = findMatches(q).slice(0, 6);
-      if (!list.length) { box.style.display = "none"; return; }
-      list.forEach(p => {
-        const d = document.createElement("div");
-        d.className = "suggestion-item";
-        d.textContent = p.name;
-        d.onclick = () => { searchInput.value = p.name; box.style.display = "none"; search(); };
-        box.appendChild(d);
-      });
-      box.style.display = "block";
-    };
-    document.addEventListener('click', e => {
-      const box = document.getElementById("searchSuggestions");
-      if (!box.contains(e.target) && !searchInput.contains(e.target)) {
-        box.style.display = "none";
-      }
-    });
+/*** CLEAN FINAL SEARCH FUNCTION ***/
+function search() {
+  const q = searchInput.value.trim();
 
-    /*** Search Execution ***/
-    function search() {
-      const q = searchInput.value.trim();
-      if (!q) return;
+  if (!q) {
+    showError("Please enter a building or tour name.");
+    return;
+  }
 
-      // Directions
-      const parts = q.split(/\s+to\s+/i);
-      if (parts.length === 2) {
-        const A = findMatches(parts[0])[0];
-        const B = findMatches(parts[1])[0];
-        if (!A || !B) { alert("Invalid direction search."); return; }
-        highlightRouteBetween(A, B);
-        window.scrollTo({ top: mapContainer.offsetTop - 80, behavior: 'smooth' });
-        return;
-      }
+  const results = findMatches(q);
 
-      const results = findMatches(q);
-      if (!results.length) { alert("No tours found."); return; }
-      highlightPin(results[0].name);
-      scrollToCardFor(results[0].name);
-    }
+  if (!results.length) {
+    showError("No matching tour found. Please check your spelling.");
+    return;
+  }
+
+  highlightPin(results[0].name);
+  scrollToCardFor(results[0].name);
+}
+
 
     /*** Highlighting ***/
     function clearPinHighlights() {
-      pinElements.forEach(p => p.el.classList.remove('pin-highlight', 'pin-target'));
-    }
-    function highlightPin(name) {
-      clearPinHighlights();
-      const m = pinElements.find(p => normalize(p.data.name).includes(normalize(name)));
-      if (m) m.el.classList.add('pin-highlight');
+      pinElements.forEach(p => p.el.classList.remove("pin-highlight"));
     }
 
+    function highlightPin(name) {
+      clearPinHighlights();
+      const match = pinElements.find(p =>
+        normalize(p.data.name) === normalize(name)
+      );
+      if (match) match.el.classList.add("pin-highlight");
+    }
+
+
+    /*** Scroll to Card ***/
     function scrollToCardFor(name) {
       const cards = [...homepageTourList.querySelectorAll('.card')];
-      const idx = pins.findIndex(p => normalize(p.name).includes(normalize(name)));
+      const idx = pins.findIndex(p => normalize(p.name) === normalize(name));
+
       if (idx >= 0 && cards[idx]) {
         cards[idx].scrollIntoView({ behavior: 'smooth' });
         cards[idx].classList.add('card-flash');
         setTimeout(() => cards[idx].classList.remove('card-flash'), 900);
       }
     }
+
 
     /*** Help Modal ***/
     helpBtn.onclick = () => helpModal.classList.add('show');

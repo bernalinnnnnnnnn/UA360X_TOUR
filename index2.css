@@ -520,3 +520,20 @@ header h1 {
     left: 18px;
   }
 }
+
+#errorToast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  background: #ef4444; /* red */
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: none;
+  opacity: 0;
+  z-index: 9999;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
