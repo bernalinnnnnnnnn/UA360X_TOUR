@@ -537,3 +537,60 @@ header h1 {
   box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
+
+
+/* --- Mobile Fixes Added --- */
+@media(max-width:480px) {
+  .help-content {
+    width: 94% !important;
+    padding: 16px !important;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .help-content h2,
+  .help-content h3 {
+    font-size: 1.05rem;
+  }
+  .help-content ul {
+    padding-left: 18px;
+  }
+  #homepageTourList {
+    display: none;
+  }
+  .viewer iframe {
+    transform: scale(1.15);
+    transform-origin: center;
+  }
+  .viewer .overlay-logo.left {
+    width: 90px !important;
+    height: 90px !important;
+  }
+  .back-btn, .drawer-btn {
+    width: 65px !important;
+    height: 65px !important;
+    font-size: 30px !important;
+  }
+  .btn-tooltip {
+    font-size: 0.75rem !important;
+  }
+  .pin {
+    width: 40px;
+    height: 40px;
+  }
+  .pin .tooltip {
+    font-size: 0.9rem;
+  }
+  #searchWrapFixed {
+    flex-direction: column;
+    gap: 6px;
+  }
+  #searchWrapFixed input {
+    font-size: 1rem;
+    padding: 12px;
+  }
+  #searchWrapFixed button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+}

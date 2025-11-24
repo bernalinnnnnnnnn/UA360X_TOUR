@@ -34,30 +34,6 @@
       height: 100px;
     }
 
-.error-box {
-  width: 100%;
-  background: #ff4d4d;
-  color: white;
-  padding: 10px 15px;
-  margin-top: 8px;
-  border-radius: 8px;
-  font-size: 14px;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-
-/* Simple fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -45%); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
-}
-
-
-
-
-
     @media(max-width:768px) {
       .viewer .overlay-logo.left {
         top: 15px;
@@ -69,7 +45,6 @@
   </style>
 </head>
 
-
 <body>
   <header>
     <h1>University of Abra, Main Campus</h1>
@@ -78,7 +53,6 @@
   <!-- FIXED SEARCH BAR -->
   <div id="searchWrapFixed">
     <input id="searchInput" type="text" placeholder="Search tours (e.g. 'Administration Building', 'HEAS Building')" />
-    <div id="errorBox" class="error-box"></div>
     <button id="searchBtn">Search</button>
     <button id="helpBtn">Users Guide</button>
   </div>
@@ -126,7 +100,6 @@
     </div>
 
   </div>
-
 
   <!-- Help / User Guide Modal -->
   <div class="help-modal" id="helpModal" role="dialog" aria-modal="true" aria-hidden="true">
@@ -266,7 +239,7 @@
       "7H4HH": "thumbs/agri.jpg",              // Agriculture Laboratory
       "7H4DT": "thumbs/labschool.jpg",         // Lab School
       "7H4qw": "thumbs/natsci.jpg",            // NatSci Lab
-      "7Dtgc": "thumbs/sciences.jpg", // College of Arts & Sciences (you chose E)
+      "7Dtgc": "thumbs/sciences.jpg",         // College of Arts & Sciences (you chose E)
       "7DrsL": "thumbs/new-agri.jpg",          // College of Agriculture
       "7DSqc": "thumbs/exe.jpg",               // Executive House
       "7DSkB": "thumbs/guest.jpg",             // Guest House
@@ -506,27 +479,6 @@ const aliases = {
   "gate": "Main Gate"
 };
 
-function showError(msg) {
-  const box = document.getElementById("errorBox");
-  if (!box) return;
-
-  box.textContent = msg;
-  box.style.display = "block";
-
-  setTimeout(() => {
-    box.style.opacity = "1";
-  }, 10); // fade in
-
-  // Auto-hide after 3 seconds
-  setTimeout(() => {
-    box.style.opacity = "0";
-    setTimeout(() => {
-      box.style.display = "none";
-    }, 300);
-  }, 3000);
-}
-
-
 /*** Fuzzy Matching ***/
 function fuzzyScore(target, query) {
   target = normalize(target);
@@ -659,8 +611,7 @@ function search() {
         setTimeout(() => cards[idx].classList.remove('card-flash'), 900);
       }
     }
-
-
+    
     /*** Help Modal ***/
     helpBtn.onclick = () => helpModal.classList.add('show');
     closeHelp.onclick = () => helpModal.classList.remove('show');
