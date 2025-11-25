@@ -521,24 +521,6 @@ header h1 {
   }
 }
 
-#errorToast {
-  position: fixed;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  background: #ef4444; /* red */
-  color: white;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-size: 14px;
-  display: none;
-  opacity: 0;
-  z-index: 9999;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-
 /* --- Mobile Fixes Added --- */
 @media(max-width:480px) {
   .help-content {
@@ -592,5 +574,98 @@ header h1 {
     width: 100%;
     padding: 12px;
     font-size: 1rem;
+  }
+}
+#searchWrapFixed button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  /* >>> ADDED TO MAKE SEARCH + ❓ SAME SIZE <<< */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* OPTIONAL: make both buttons EXACT WIDTH */
+#searchBtn,
+#helpBtn {
+  width: 100px; /* adjust as needed */
+}
+/* ABOUT US */
+.about-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  margin-top: 30px;
+}
+
+.about-card.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 25px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
+
+.about-image.top img {
+  width: 200%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(14, 165, 255, 0.45);
+  margin-bottom: 18px;
+}
+
+.about-text.center {
+  width: 100%;
+  color: var(--text);
+}
+
+.about-text.center h2 {
+  color: var(--primary);
+  margin-bottom: 12px;
+  font-size: 1.7rem;
+}
+
+.about-text.center h3 {
+  margin-top: 18px;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.about-text.center p {
+  margin-bottom: 12px;
+  line-height: 1.55;
+  opacity: 0.95;
+}
+
+.about-text.center ul {
+  list-style: disc;
+  text-align: left;
+  padding-left: 20px;
+  margin: 0 auto;
+  max-width: 350px;
+}
+
+/* MOBILE */
+@media(max-width: 480px) {
+  .about-image.top img {
+    width: 95%;
   }
 }

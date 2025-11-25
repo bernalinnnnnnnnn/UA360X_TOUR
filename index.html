@@ -54,7 +54,7 @@
   <div id="searchWrapFixed">
     <input id="searchInput" type="text" placeholder="Search tours (e.g. 'Administration Building', 'HEAS Building')" />
     <button id="searchBtn">Search</button>
-    <button id="helpBtn">Users Guide</button>
+    <button id="helpBtn">❓</button>
   </div>
 
   <!-- Search suggestions -->
@@ -196,6 +196,49 @@
         For questions or suggestions, please contact us at:<br>
         <a href="mailto:uaxxxtour@gmail.com">uaxxxtour@gmail.com</a>
       </p>
+      <section class="about-container" id="aboutUs">
+        <div class="about-card vertical">
+
+          <div class="about-image top">
+            <img src="assets/team.jpg" alt="UA360X Team">
+          </div>
+
+          <div class="about-text center">
+            <h2>About Us</h2>
+            <p>
+              We are the development team behind <strong>UA360X</strong> — an interactive
+              360-degree virtual tour designed to help students, parents, visitors, and staff
+              explore the University of Abra’s indoor facilities through immersive panoramic views.
+            </p>
+
+            <p>
+              Our goal is to create a seamless and modern digital experience that showcases
+              the university’s infrastructure while making campus navigation easier and more engaging.
+            </p>
+
+            <h3>Our Team</h3>
+            <ul>
+              <strong>
+                <center>Mr. Oliver Lance Insigne</center>
+              </strong><br>
+              <strong>
+                <center>Bernalyn M. Benedicto</center>
+              </strong><br>
+              <strong>
+                <center>Aldrin M. Alcaide</center>
+              </strong><br>
+              <strong>
+                <center>Saif Aldridge P. Benedicto</center>
+              </strong><br>
+              <strong>
+                <center>Ariene Glieza Y. Casigay</center>
+              </strong><br>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
 
 
 
@@ -384,206 +427,206 @@
     };
 
 
-  /*** Search System ***/
-function normalize(str) {
-  return (str || "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
-const aliases = {
-  "admin": "Administration Building",
-  "administration": "Administration Building",
-  "administration building": "Administration Building",
-
-  "ict": "Information and Communication Technology Center",
-  "cmcs": "Information and Communication Technology Center",
-  "ict center": "Information and Communication Technology Center",
-  "computer": "Information and Communication Technology Center",
-
-  "gym": "Assist Gymnasium",
-  "gymnasium": "Assist Gymnasium",
-
-  "cte": "College of Teacher Education",
-  "teacher education": "College of Teacher Education",
-  "educ": "College of Teacher Education",
-
-  "natsci": "Natural Sciences Central Laboratory",
-  "natural science": "Natural Sciences Central Laboratory",
-  "nscl": "Natural Sciences Central Laboratory",
-
-  "lab school": "Asist Laboratory School",
-  "laboratory school": "Asist Laboratory School",
-  "labschool": "Asist Laboratory School",
-  "high school": "Asist Laboratory School",
-  "highschool": "Asist Laboratory School",
-  "lab high": "Asist Laboratory School",
-
-  "cas": "College of Arts and Sciences",
-  "arts and sciences": "College of Arts and Sciences",
-  "science building": "College of Arts and Sciences",
-
-  "agri": "College of Agriculture",
-  "agriculture": "College of Agriculture",
-  "new agriculture building": "College of Agriculture",
-  "new agri": "College of Agriculture",
-
-  "agri lab": "Agriculture Laboratory Building",
-  "agri laboratory": "Agriculture Laboratory Building",
-  "old agriculture building": "Agriculture Laboratory Building",
-  "old agri": "Agriculture Laboratory Building",
-
-  "atdc": "Asist Training and Development Center",
-  "training center": "Asist Training and Development Center",
-
-  "guidance": "Guidance and Counseling Office",
-  "guidance office": "Guidance and Counseling Office",
-
-  "sc": "Student Center",
-  "student center": "Student Center",
-
-  "exe": "Executive House",
-  "executive house": "Executive House",
-
-  "guest": "Guest House",
-  "guesthouse": "Guest House",
-
-  "forestry": "Forestry Laboratory Center",
-  "forestry building": "Forestry Laboratory Center",
-
-  "aftiicc": "AFTIICC",
-
-  "research and extension department": "Research and Extension Building",
-  "extension": "Research and Extension Building",
-  "research": "Research and Extension Building",
-
-  "heas": "HEAS Building",
-  "heas building": "HEAS Building",
-
-  "ffp": "FFP Hall",
-  "ffp hall": "FFP Hall",
-
-  "vpu": "Village Level Processing Unit",
-  "processing unit": "Village Level Processing Unit",
-  "village level": "Village Level Processing Unit",
-  "village": "Village Level Processing Unit",
-
-  "ht": "Home Technology Department",
-  "home tech": "Home Technology Department",
-
-  "bamboo": "Bamboo Textile Fiber Innovation Hub",
-  "bamboo hub": "Bamboo Textile Fiber Innovation Hub",
-
-  "main gate": "Main Gate",
-  "gate": "Main Gate"
-};
-
-/*** Fuzzy Matching ***/
-function fuzzyScore(target, query) {
-  target = normalize(target);
-  query = normalize(query);
-
-  let score = 0, ti = 0, qi = 0;
-
-  while (ti < target.length && qi < query.length) {
-    if (target[ti] === query[qi]) {
-      score += 2;
-      qi++;
+    /*** Search System ***/
+    function normalize(str) {
+      return (str || "")
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, " ");
     }
-    ti++;
-  }
 
-  if (target.includes(query)) score += 5;
-  if (target.startsWith(query)) score += 3;
+    const aliases = {
+      "admin": "Administration Building",
+      "administration": "Administration Building",
+      "administration building": "Administration Building",
 
-  return score;
-}
+      "ict": "Information and Communication Technology Center",
+      "cmcs": "Information and Communication Technology Center",
+      "ict center": "Information and Communication Technology Center",
+      "computer": "Information and Communication Technology Center",
 
-/*** Find Matches (Alias + Fuzzy) ***/
-function findMatches(q) {
-  q = normalize(q);
-  if (!q) return [];
+      "gym": "Assist Gymnasium",
+      "gymnasium": "Assist Gymnasium",
 
-  // 1. Check alias direct match or inside input
-  for (const a in aliases) {
-    const cleanA = normalize(a);
-    if (q === cleanA || q.includes(cleanA)) {
-      const aliasedName = aliases[a];
-      return pins.filter(p => normalize(p.name) === normalize(aliasedName));
-    }
-  }
+      "cte": "College of Teacher Education",
+      "teacher education": "College of Teacher Education",
+      "educ": "College of Teacher Education",
 
-  // 2. Fuzzy matching
-  let results = [];
+      "natsci": "Natural Sciences Central Laboratory",
+      "natural science": "Natural Sciences Central Laboratory",
+      "nscl": "Natural Sciences Central Laboratory",
 
-  pins.forEach(p => {
-    const score = fuzzyScore(p.name, q);
-    if (score >= 5) results.push({ p, s: score });
-  });
+      "lab school": "Asist Laboratory School",
+      "laboratory school": "Asist Laboratory School",
+      "labschool": "Asist Laboratory School",
+      "high school": "Asist Laboratory School",
+      "highschool": "Asist Laboratory School",
+      "lab high": "Asist Laboratory School",
 
-  results.sort((a, b) => b.s - a.s);
-  return results.map(r => r.p);
-}
+      "cas": "College of Arts and Sciences",
+      "arts and sciences": "College of Arts and Sciences",
+      "science building": "College of Arts and Sciences",
 
-/*** Suggestions Dropdown ***/
-searchInput.oninput = () => {
-  const box = document.getElementById("searchSuggestions");
-  box.innerHTML = "";
+      "agri": "College of Agriculture",
+      "agriculture": "College of Agriculture",
+      "new agriculture building": "College of Agriculture",
+      "new agri": "College of Agriculture",
 
-  const q = searchInput.value.trim();
-  if (!q) {
-    box.style.display = "none";
-    return;
-  }
+      "agri lab": "Agriculture Laboratory Building",
+      "agri laboratory": "Agriculture Laboratory Building",
+      "old agriculture building": "Agriculture Laboratory Building",
+      "old agri": "Agriculture Laboratory Building",
 
-  const list = findMatches(q).slice(0, 6);
-  if (!list.length) {
-    box.style.display = "none";
-    return;
-  }
+      "atdc": "Asist Training and Development Center",
+      "training center": "Asist Training and Development Center",
 
-  list.forEach(p => {
-    const d = document.createElement("div");
-    d.className = "suggestion-item";
-    d.textContent = p.name;
-    d.onclick = () => {
-      searchInput.value = p.name;
-      box.style.display = "none";
-      search();
+      "guidance": "Guidance and Counseling Office",
+      "guidance office": "Guidance and Counseling Office",
+
+      "sc": "Student Center",
+      "student center": "Student Center",
+
+      "exe": "Executive House",
+      "executive house": "Executive House",
+
+      "guest": "Guest House",
+      "guesthouse": "Guest House",
+
+      "forestry": "Forestry Laboratory Center",
+      "forestry building": "Forestry Laboratory Center",
+
+      "aftiicc": "AFTIICC",
+
+      "research and extension department": "Research and Extension Building",
+      "extension": "Research and Extension Building",
+      "research": "Research and Extension Building",
+
+      "heas": "HEAS Building",
+      "heas building": "HEAS Building",
+
+      "ffp": "FFP Hall",
+      "ffp hall": "FFP Hall",
+
+      "vpu": "Village Level Processing Unit",
+      "processing unit": "Village Level Processing Unit",
+      "village level": "Village Level Processing Unit",
+      "village": "Village Level Processing Unit",
+
+      "ht": "Home Technology Department",
+      "home tech": "Home Technology Department",
+
+      "bamboo": "Bamboo Textile Fiber Innovation Hub",
+      "bamboo hub": "Bamboo Textile Fiber Innovation Hub",
+
+      "main gate": "Main Gate",
+      "gate": "Main Gate"
     };
-    box.appendChild(d);
-  });
 
-  box.style.display = "block";
-};
+    /*** Fuzzy Matching ***/
+    function fuzzyScore(target, query) {
+      target = normalize(target);
+      query = normalize(query);
 
-document.addEventListener("click", e => {
-  const box = document.getElementById("searchSuggestions");
-  if (!box.contains(e.target) && e.target !== searchInput) {
-    box.style.display = "none";
-  }
-});
+      let score = 0, ti = 0, qi = 0;
 
-/*** CLEAN FINAL SEARCH FUNCTION ***/
-function search() {
-  const q = searchInput.value.trim();
+      while (ti < target.length && qi < query.length) {
+        if (target[ti] === query[qi]) {
+          score += 2;
+          qi++;
+        }
+        ti++;
+      }
 
-  if (!q) {
-    showError("Please enter a building or tour name.");
-    return;
-  }
+      if (target.includes(query)) score += 5;
+      if (target.startsWith(query)) score += 3;
 
-  const results = findMatches(q);
+      return score;
+    }
 
-  if (!results.length) {
-    showError("No matching tour found. Please check your spelling.");
-    return;
-  }
+    /*** Find Matches (Alias + Fuzzy) ***/
+    function findMatches(q) {
+      q = normalize(q);
+      if (!q) return [];
 
-  highlightPin(results[0].name);
-  scrollToCardFor(results[0].name);
-}
+      // 1. Check alias direct match or inside input
+      for (const a in aliases) {
+        const cleanA = normalize(a);
+        if (q === cleanA || q.includes(cleanA)) {
+          const aliasedName = aliases[a];
+          return pins.filter(p => normalize(p.name) === normalize(aliasedName));
+        }
+      }
+
+      // 2. Fuzzy matching
+      let results = [];
+
+      pins.forEach(p => {
+        const score = fuzzyScore(p.name, q);
+        if (score >= 5) results.push({ p, s: score });
+      });
+
+      results.sort((a, b) => b.s - a.s);
+      return results.map(r => r.p);
+    }
+
+    /*** Suggestions Dropdown ***/
+    searchInput.oninput = () => {
+      const box = document.getElementById("searchSuggestions");
+      box.innerHTML = "";
+
+      const q = searchInput.value.trim();
+      if (!q) {
+        box.style.display = "none";
+        return;
+      }
+
+      const list = findMatches(q).slice(0, 6);
+      if (!list.length) {
+        box.style.display = "none";
+        return;
+      }
+
+      list.forEach(p => {
+        const d = document.createElement("div");
+        d.className = "suggestion-item";
+        d.textContent = p.name;
+        d.onclick = () => {
+          searchInput.value = p.name;
+          box.style.display = "none";
+          search();
+        };
+        box.appendChild(d);
+      });
+
+      box.style.display = "block";
+    };
+
+    document.addEventListener("click", e => {
+      const box = document.getElementById("searchSuggestions");
+      if (!box.contains(e.target) && e.target !== searchInput) {
+        box.style.display = "none";
+      }
+    });
+
+    /*** CLEAN FINAL SEARCH FUNCTION ***/
+    function search() {
+      const q = searchInput.value.trim();
+
+      if (!q) {
+        showError("Please enter a building or tour name.");
+        return;
+      }
+
+      const results = findMatches(q);
+
+      if (!results.length) {
+        showError("No matching tour found. Please check your spelling.");
+        return;
+      }
+
+      highlightPin(results[0].name);
+      scrollToCardFor(results[0].name);
+    }
 
 
     /*** Highlighting ***/
@@ -611,7 +654,7 @@ function search() {
         setTimeout(() => cards[idx].classList.remove('card-flash'), 900);
       }
     }
-    
+
     /*** Help Modal ***/
     helpBtn.onclick = () => helpModal.classList.add('show');
     closeHelp.onclick = () => helpModal.classList.remove('show');
