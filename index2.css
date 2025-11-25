@@ -456,8 +456,6 @@ header h1{
   .about-text.center h3{ font-size:1.45rem; }
   .about-text.center p, .about-text.center li{ font-size:1.15rem; line-height:1.7; }
 
-  /* Avoid scaling iframe too large on tiny phones; smart scale rules above will apply */
-  .viewer iframe{ /* keep natural unless smart rules trigger */ }
 }
 
 /* small polish for very narrow phones (portrait ultra narrow) */
@@ -472,3 +470,73 @@ header h1{
 .center{ text-align:center; }
 
 /* End of cleaned index2.css */
+
+/* =====================================================
+   HELP MODAL TEXT READABILITY BOOST (GLOBAL)
+   ===================================================== */
+.help-content {
+  font-size: 1.18rem !important;
+  line-height: 1.85 !important;
+}
+
+.help-content p,
+.help-content li {
+  font-size: 1.18rem !important;
+  line-height: 1.85 !important;
+}
+
+.help-content h2 {
+  font-size: 1.9rem !important;
+  margin-bottom: 14px !important;
+}
+
+.help-content h3 {
+  font-size: 1.55rem !important;
+  margin-top: 20px !important;
+  margin-bottom: 10px !important;
+}
+
+.help-content h4 {
+  font-size: 1.35rem !important;
+  margin-top: 18px !important;
+  margin-bottom: 8px !important;
+}
+
+.help-content ul {
+  padding-left: 28px !important;
+}
+
+.help-content a {
+  font-size: 1.18rem !important;
+}
+
+/* MOBILE-SPECIFIC BOOST */
+@media (max-width: 480px) {
+  .help-content {
+    font-size: 1.32rem !important;
+    line-height: 1.95 !important;
+  }
+
+  .help-content p,
+  .help-content li {
+    font-size: 1.32rem !important;
+    line-height: 1.95 !important;
+  }
+
+  .help-content h2 {
+    font-size: 2.1rem !important;
+  }
+
+  .help-content h3 {
+    font-size: 1.7rem !important;
+  }
+
+  .help-content h4 {
+    font-size: 1.45rem !important;
+  }
+
+  .help-content a {
+    font-size: 1.32rem !important;
+  }
+}
+
