@@ -669,3 +669,70 @@ header h1 {
     width: 95%;
   }
 }
+
+/* --- FINAL MOBILE FONT FIX (PLACE AT VERY BOTTOM OF CSS) --- */
+@media(max-width: 480px) {
+
+  /* Make the entire User Guide readable */
+  .help-content {
+    width: 96% !important;
+    padding: 22px !important;
+    font-size: 1.12rem !important; /* Bigger base size */
+    line-height: 1.7 !important;
+  }
+
+  .help-content h2 {
+    font-size: 1.55rem !important;
+    margin-bottom: 12px !important;
+  }
+
+  .help-content h3,
+  .help-content h4 {
+    font-size: 1.3rem !important;
+    margin-top: 16px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .help-content p,
+  .help-content li {
+    font-size: 1.12rem !important;
+    line-height: 1.7 !important;
+  }
+
+  .help-content ul {
+    padding-left: 26px !important;
+  }
+
+  /* Make the ABOUT US text readable */
+  .about-text.center p,
+  .about-text.center li {
+    font-size: 1.15rem !important;
+    line-height: 1.7 !important;
+  }
+
+  .about-text.center h2 {
+    font-size: 1.9rem !important;
+  }
+
+  .about-text.center h3 {
+    font-size: 1.45rem !important;
+  }
+
+  /* Search bar improvements */
+  #searchWrapFixed input {
+    font-size: 1.15rem !important;
+    padding: 14px !important;
+  }
+
+  #searchWrapFixed button {
+    font-size: 1.15rem !important;
+    padding: 14px !important;
+  }
+
+  /* Buttons bigger but still balanced */
+  .back-btn, .drawer-btn {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 32px !important;
+  }
+}
