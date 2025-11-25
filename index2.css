@@ -110,6 +110,56 @@ header h1{
   box-shadow: 0 8px 16px rgba(14,165,255,0.35);
 }
 
+/* UNIFIED BUTTON STYLING FOR searchBtn & helpBtn */
+#searchBtn,
+#helpBtn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 12px 16px;     /* equal padding */
+  border-radius: var(--ui-radius);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.15rem;     /* equal text size */
+  height: 48px;           /* equal height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform .18s, box-shadow .18s;
+}
+
+#searchBtn:hover,
+#helpBtn:hover {
+  background: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(14,165,255,0.35);
+}
+#searchBtn,
+#helpBtn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.25rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;          /* SAME WIDTH */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform .18s, box-shadow .18s;
+}
+
+/* MAKE THE QUESTION MARK BIGGER */
+#helpBtn {
+  font-size: 2.2rem !important;
+}
+
+
 /* SUGGESTIONS DROPDOWN */
 #searchSuggestions{
   position:absolute;
@@ -371,38 +421,124 @@ header h1{
 /* HELP MODAL (User Guide) */
 .help-modal{
   position:fixed; inset:0; background: rgba(0,0,0,0.45);
-  visibility:hidden; opacity:0; z-index:700; display:flex; justify-content:center; align-items:center;
+  visibility:hidden; opacity:0; z-index:700; 
+  display:flex; justify-content:center; align-items:center;
   transition: opacity .2s, visibility .2s;
 }
 .help-modal.show{ visibility:visible; opacity:1; }
+
 .help-content{
   background: rgba(15,23,42,0.92); color:var(--text);
-  width:92%; max-width:900px; border-radius:14px; padding:26px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4); max-height:95vh; overflow-y:auto;
+  width:92%; max-width:900px; border-radius:18px; padding:34px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45); 
+  max-height:95vh; overflow-y:auto;
   border:1px solid var(--primary);
   -webkit-overflow-scrolling: touch;
+
+  font-size:1.45rem;       /* HUGE BASE TEXT */
+  line-height:1.85;
 }
-.help-content::-webkit-scrollbar{ width:8px; }
-.help-content::-webkit-scrollbar-thumb{ background:var(--primary); border-radius:6px; }
-.close-help{ float:right; font-size:22px; background:none; border:none; cursor:pointer; color:white; }
+.help-content h2{ font-size:2.5rem; margin-bottom:18px; }
+.help-content h3{ font-size:2rem; margin-top:22px; margin-bottom:12px; }
+.help-content h4{ font-size:1.65rem; margin-top:18px; margin-bottom:10px; }
+.help-content p,
+.help-content li{ font-size:1.45rem; line-height:1.85; }
+.help-content ul{ padding-left:32px; }
+
+.help-content::-webkit-scrollbar{ width:10px; }
+.help-content::-webkit-scrollbar-thumb{ background:var(--primary); border-radius:8px; }
+
+.close-help{ 
+  float:right; 
+  font-size:36px;          /* HUGE CLOSE BUTTON */
+  background:none; 
+  border:none; 
+  cursor:pointer; 
+  color:white; 
+}
+
 
 /* ABOUT US */
 .about-container{
-  width:100%; display:flex; justify-content:center; padding:40px 20px; margin-top:30px;
+  width:100%; display:flex; justify-content:center; 
+  padding:50px 24px; margin-top:40px;
 }
+
 .about-card.vertical{
   display:flex; flex-direction:column; align-items:center;
-  background: rgba(30,41,59,0.6); border-radius:14px; padding:25px; max-width:900px; width:100%;
-  border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 35px rgba(0,0,0,0.35); backdrop-filter: blur(4px); text-align:center;
+  background: rgba(30,41,59,0.65); 
+  border-radius:18px; padding:36px; 
+  max-width:900px; width:100%;
+  border:1px solid rgba(255,255,255,0.12); 
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px); text-align:center;
 }
+
 .about-image.top img{
-  width:100%; max-width:400px; border-radius:10px; box-shadow:0 4px 18px rgba(0,0,0,0.4);
-  border:2px solid rgba(14,165,255,0.45); margin-bottom:18px;
+  width:100%; 
+  max-width:450px; 
+  border-radius:12px; 
+  box-shadow:0 4px 20px rgba(0,0,0,0.45);
+  border:2px solid rgba(14,165,255,0.55); 
+  margin-bottom:26px;
 }
-.about-text.center h2{ color:var(--primary); margin-bottom:12px; font-size:1.7rem; }
-.about-text.center h3{ margin-top:18px; color:var(--primary); font-size:1.2rem; }
-.about-text.center p{ margin-bottom:12px; line-height:1.55; opacity:0.95; }
-.about-text.center ul{ list-style:disc; text-align:left; padding-left:20px; margin:0 auto; max-width:350px; }
+
+.about-text.center h2{ 
+  color:var(--primary);
+  margin-bottom:16px; 
+  font-size:2.85rem;      /* HUGE TITLE */
+}
+
+.about-text.center h3{ 
+  margin-top:20px; 
+  color:var(--primary); 
+  font-size:2rem;         /* BIG SUBTITLE */
+}
+
+.about-text.center p{ 
+  margin-bottom:18px; 
+  line-height:1.85; 
+  opacity:0.95; 
+  font-size:1.55rem;      /* BIG PARAGRAPHS */
+}
+
+.about-text.center ul{ 
+  list-style:disc; 
+  text-align:left; 
+  padding-left:32px; 
+  margin:0 auto; 
+  max-width:420px; 
+}
+
+.about-text.center li{
+  font-size:1.48rem;      /* BIG LIST ITEMS */
+  line-height:1.85;
+}
+
+
+/* 📱 MOBILE BOOST (forces larger text specifically on phones) */
+@media (max-width: 480px){
+
+  .help-content{
+    padding:36px !important;
+    font-size:1.55rem !important;
+    line-height:1.9 !important;
+  }
+
+  .help-content h2{ font-size:2.8rem !important; }
+  .help-content h3{ font-size:2.2rem !important; }
+  .help-content h4{ font-size:1.8rem !important; }
+  .help-content p,
+  .help-content li{ font-size:1.55rem !important; }
+
+  .close-help{ font-size:42px !important; }
+
+  .about-text.center h2{ font-size:3.1rem !important; }
+  .about-text.center h3{ font-size:2.3rem !important; }
+  .about-text.center p{ font-size:1.62rem !important; }
+  .about-text.center li{ font-size:1.58rem !important; }
+}
+
 
 /* SMALLER COMPONENT ADJUSTMENTS (desktop -> tablet) */
 @media (max-width: 900px){
@@ -415,55 +551,77 @@ header h1{
 /* TABLET / MOBILE (merged single block) */
 @media (max-width: 480px){
   /* layout changes */
-  #searchWrapFixed{ flex-direction:column; gap:8px; padding: 0 12px; }
-  #searchWrapFixed button{ width:100%; }
-  #searchWrapFixed input{ font-size:1.15rem; padding:14px; }
+  #searchWrapFixed{ flex-direction:column; gap:12px; padding: 0 14px; }
+  #searchWrapFixed button{ width:100%; font-size:1.35rem; padding:18px; }
+  #searchWrapFixed input{ font-size:1.32rem; padding:18px; }
 
-  header{ height:64px; }
-  header h1{ font-size:1.4rem; }
+  header{ height:72px; }
+  header h1{ font-size:1.75rem; }
 
   /* pins slightly larger for touch */
-  .pin{ width:40px; height:40px; }
-  .pin .tooltip{ font-size:1.02rem; }
+  .pin{ width:26px; height:26px; }
+  .pin .tooltip{ font-size:1.22rem; }
 
   /* viewer controls larger but balanced */
-  .back-btn, .drawer-btn{ width:72px; height:72px; font-size:30px; bottom:18px; }
-  .back-btn{ left:18px; } .drawer-btn{ right:18px; }
-  .btn-tooltip{ font-size:1rem; }
+  .back-btn, .drawer-btn{ 
+    width:95px; 
+    height:95px; 
+    font-size:45px; 
+    bottom:26px; 
+  }
+  .back-btn{ left:34px; } 
+  .drawer-btn{ right:34px; }
+
+  .btn-tooltip{ font-size:1.55rem; }
 
   /* homepage cards */
-  .homepage-tour-list{ display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:16px; padding-bottom:24px; }
-  .homepage-tour-list .card h2{ font-size:1.08rem; padding:14px; }
-  .homepage-tour-list .card img{ height:150px; }
-
-  /* help modal: near-fullscreen (95vh) with bigger type */
-  .help-content{
-    width:96% !important;
-    padding:22px !important;
-    font-size:1.12rem !important;
-    line-height:1.7 !important;
-    border-radius:12px;
-    max-height:95vh;
+  .homepage-tour-list{ 
+    display:grid; 
+    grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); 
+    gap:22px; 
+    padding-bottom:32px; 
   }
-  .help-content h2{ font-size:1.55rem; margin-bottom:12px; }
-  .help-content h3, .help-content h4{ font-size:1.3rem; margin-top:14px; margin-bottom:8px; }
-  .help-content p, .help-content li{ font-size:1.12rem; line-height:1.7; }
-  .help-content ul{ padding-left:26px; }
+  .homepage-tour-list .card h2{ 
+    font-size:1.32rem; 
+    padding:18px; 
+  }
+  .homepage-tour-list .card img{ height:180px; }
+
+  /* help modal: near-fullscreen with bigger type */
+  .help-content{
+    width:97% !important;
+    padding:28px !important;
+    font-size:1.32rem !important;
+    line-height:1.78 !important;
+    border-radius:14px;
+    max-height:96vh;
+  }
+  .help-content h2{ font-size:2rem; margin-bottom:16px; }
+  .help-content h3, .help-content h4{ font-size:1.65rem; margin-top:18px; margin-bottom:10px; }
+  .help-content p, .help-content li{ font-size:1.32rem; line-height:1.78; }
+  .help-content ul{ padding-left:32px; }
 
   /* About Us readable */
-  .about-image.top img{ max-width:95%; }
-  .about-text.center h2{ font-size:1.9rem; }
-  .about-text.center h3{ font-size:1.45rem; }
-  .about-text.center p, .about-text.center li{ font-size:1.15rem; line-height:1.7; }
-
+  .about-image.top img{ max-width:97%; margin-bottom:24px; }
+  .about-text.center h2{ font-size:2.35rem; }
+  .about-text.center h3{ font-size:1.75rem; }
+  .about-text.center p, .about-text.center li{ 
+    font-size:1.32rem; 
+    line-height:1.78; 
+  }
 }
 
 /* small polish for very narrow phones (portrait ultra narrow) */
 @media (max-width: 360px){
-  .pin{ width:36px; height:36px; }
-  .homepage-tour-list .card img{ height:130px; }
-  #searchWrapFixed input, #searchWrapFixed button{ font-size:1rem; padding:12px; }
+  .pin{ width:38px; height:38px; }
+  .homepage-tour-list .card img{ height:145px; }
+  #searchWrapFixed input, 
+  #searchWrapFixed button{ 
+    font-size:1.18rem; 
+    padding:14px; 
+  }
 }
+
 
 /* Utility helpers (non-conflicting) */
 .hidden{ display:none !important; }
