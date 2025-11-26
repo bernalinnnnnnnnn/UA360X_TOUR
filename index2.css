@@ -204,51 +204,95 @@ header h1{
   -webkit-user-drag:none;
 }
 
-/* PIN LAYER */
-.pin-container{
-  position:absolute;
+/* =====================================================
+   PIN LAYER – FIXED TOOLTIP, LEFT SIDE, TWO SECTIONS,
+   READY FOR ANIMATED IMAGE SWAP
+   ===================================================== */
+
+.pin-container {
+  position: absolute;
   inset: 0;
   pointer-events: none;
 }
-.pin{
-  position:absolute;
-  width:26px;
-  height:26px;
+
+/* Default pin */
+.pin {
+  position: absolute;
+  width: 26px;
+  height: 26px;
   background: url("assets/pin2.png") center bottom/contain no-repeat;
-  transform: translate(-50%,-100%);
+  transform: translate(-50%, -100%);
   pointer-events: auto;
-  z-index:30;
-  transition: transform .18s ease, z-index .12s;
-}
-.pin:hover{
-  transform: translate(-50%,-110%) scale(1.08);
-  z-index:40;
-}
-.pin .tooltip{
-  position:absolute;
-  bottom:100%;
-  left:50%;
-  transform: translate(-50%,-8px);
-  color:#fff;
-  font-size:0.78rem;
-  opacity:0;
-  transition: opacity .14s, transform .14s;
-  white-space:nowrap;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-}
-.pin:hover .tooltip{
-  opacity:1;
-  transform: translate(-50%,-3px);
+  z-index: 30;
+  transition: transform .18s ease, z-index .12s, background .2s ease;
 }
 
-/* pin highlight animation */
-.pin-highlight{ animation: pulse 1s ease infinite; }
-@keyframes pulse{
-  0%{ transform: translate(-50%,-100%) scale(1); }
-  50%{ transform: translate(-50%,-100%) scale(1.15); }
-  100%{ transform: translate(-50%,-100%) scale(1); }
+/* Hover enlarge */
+.pin:hover {
+  transform: translate(-50%, -110%) scale(1.08);
+  z-index: 40;
 }
-.pin-target{ transform: translate(-50%,-120%) scale(1.12) !important; z-index:60; }
+
+/* Tooltip – NOW LEFT SIDE + 2-SECTION FORMAT */
+.pin .tooltip {
+  position: absolute;
+  top: 50%;
+  left: 110%;  /* Move tooltip to the LEFT side */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.78);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: white;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+/* 2 sections inside tooltip */
+.tooltip .top-line {
+  font-weight: 600;
+  color: #b8ffb8;
+}
+
+.tooltip .bottom-line {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Hover reveal */
+.pin:hover .tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-3px);
+}
+
+/* Highlight animation (pulse) */
+.pin-highlight { 
+  animation: pulse 1s ease infinite; 
+}
+
+/* Replace image during animation (add the new image here when user gives the file) */
+.pin-highlight {
+  background-image: url("assets/pin3.png"); /* <-- Replace with your provided image */
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -100%) scale(1); }
+  50% { transform: translate(-50%, -100%) scale(1.15); }
+  100% { transform: translate(-50%, -100%) scale(1); }
+}
+
+/* Target pin (selected pin) */
+.pin-target {
+  transform: translate(-50%, -120%) scale(1.12) !important;
+  z-index: 60;
+}
+
 
 /* ROUTE SVG */
 .route-svg{
